@@ -11,3 +11,9 @@ export default function handler(
 ) {
   res.status(200).json({ name: 'John Doe' })
 }
+
+//configuracao da ferramenta de comunicacao com o banco de dados
+// npm i prisma -D
+// npm i @prisma/client
+
+//iniciar npx prisma init --datasource-provider SQLite

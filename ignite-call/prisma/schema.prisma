@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// criar uma model (TABELA, ENTIDADE)
+model User {
+  id       String @id @default(uuid())
+  username String @unique //nao permite que sejam cadastrados usuarios com mesmo nome
+  name     String
+
+  created_at DateTime @default(now()) //preencher o campo com o valor atual no banco de dados
+
+  // cria minha tabela com este nome em vez do nome no model
+  @@map("users")
+}
+
+//para rodar o comando, abrir o terminal e digitar: npx prisma migrate dev
+// vai rodar o comando e ler o schema.prisma e ver quais alteracoes que foram feitas
+
+//migration eh um historico de alteracoes feitas no banco de dados, como se fosse um commit
+// para ver o banco de dados populado rodo o comando: npx prisma studio
+
