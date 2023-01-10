@@ -7,21 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// para rodar o comando, abrir o terminal e digitar: npx prisma migrate dev
+// vai rodar o comando e ler o schema.prisma e ver quais alteracoes que foram feitas
+
+// migration eh um historico de alteracoes feitas no banco de dados, como se fosse um commit
+// para ver o banco de dados populado rodo o comando: npx prisma studio
+
 // criar uma model (TABELA, ENTIDADE)
 model User {
-  id       String @id @default(uuid())
-  username String @unique //nao permite que sejam cadastrados usuarios com mesmo nome
-  name     String
-
+  id         String   @id @default(uuid())
+  username   String   @unique //nao permite que sejam cadastrados usuarios com mesmo nome
+  name       String
+  email      String?  @unique
+  avatar_url String?
   created_at DateTime @default(now()) //preencher o campo com o valor atual no banco de dados
+
+  accounts Account[]
+  sessions Session[]
 
   // cria minha tabela com este nome em vez do nome no model
   @@map("users")
 }
 
-//para rodar o comando, abrir o terminal e digitar: npx prisma migrate dev
-// vai rodar o comando e ler o schema.prisma e ver quais alteracoes que foram feitas
 
-//migration eh um historico de alteracoes feitas no banco de dados, como se fosse um commit
-// para ver o banco de dados populado rodo o comando: npx prisma studio
+// o mesmo usuario pode logar com um account(Google) - uma linha na tabela account coms os dados de um usuario, pode logar com Facebook, mais uma linha, github, etc etc, sempre com o mesmo usuario
+model Account {
+  id                  String  @id @default(cuid())
+  user_id             String
+  type                String
+  provider            String
+  provider_account_id String
+  refresh_token       String?
+  access_token        String?
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_account_id])
+  // cria minha tabela com este nome em vez do nome no model
+  @@map("accounts")
+}
+
+//sempre que o usuario fizer login em uma maquina diferente, eu tenho uma sessao
+model Session {
+  id            String   @id @default(cuid())
+  session_token String   @unique
+  user_id       String
+  expires       DateTime
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  // cria minha tabela com este nome em vez do nome no model
+  @@map("sessions")
+}
