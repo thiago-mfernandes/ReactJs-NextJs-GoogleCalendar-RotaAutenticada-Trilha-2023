@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Form } from "./styles";
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormAnnotation } from "../../home/styles";
+import { useRouter } from "next/router";
 
 // esquema de validacao e declaracao do que vai ser recebido no formulario
 const claimUsernameFormSchema = z.object({
@@ -21,13 +22,19 @@ type claimUsernameFormData = z.infer<typeof claimUsernameFormSchema>;
 
 export function ClaimUsernameForm() {
   // desestruturacao das funcoes e passagem de objeto resolver
-  const { register, handleSubmit, formState: { errors } } = useForm<claimUsernameFormData>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<claimUsernameFormData>({
     //zod resolver recebe qual Schema de validacao vai validar
     resolver: zodResolver(claimUsernameFormSchema),
   });
 
+  //acessar o redirecionamento
+  const router = useRouter()
+
   async function handleClaimUsername(data: claimUsernameFormData) {
-    console.log(data);
+    const { username } = data;
+
+    //redirecionamento: envio por queryparam o username
+    await router.push(`/register?username=${username}`)
   }
 
   return (
@@ -39,7 +46,7 @@ export function ClaimUsernameForm() {
           placeholder="seu-usuario"
           {...register('username')}
         />
-        <Button size="sm" type="submit">
+        <Button size="sm" type="submit" disabled={isSubmitting}>
           Reservar
           <ArrowRight />
         </Button>
