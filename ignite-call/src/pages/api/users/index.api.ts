@@ -2,6 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { setCookie } from 'nookies'
 import { prisma } from '../../../lib/prisma';
 
+// dentro do res eu tenho os cookies
+// dentro do req eu posso modificar os cookies
+
 export default async function handler( req: NextApiRequest, res: NextApiResponse) {
   // essa funcao aceita qualquer metodo
   if(req.method !== 'POST') {
