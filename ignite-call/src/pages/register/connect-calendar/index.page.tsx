@@ -6,7 +6,7 @@ import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/router";
 
 
-export default function Register() {  
+export default function ConnectCalendar() {  
   //para ver se o usuario esta logado:
   const session = useSession();
 

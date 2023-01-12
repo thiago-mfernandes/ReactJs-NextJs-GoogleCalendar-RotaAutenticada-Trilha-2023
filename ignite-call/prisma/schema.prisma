@@ -22,13 +22,13 @@ model User {
   avatar_url String?
   created_at DateTime @default(now()) //preencher o campo com o valor atual no banco de dados
 
-  accounts Account[]
-  sessions Session[]
+  accounts      Account[]
+  sessions      Session[]
+  timeIntervals UserTimeInterval[]
 
   // cria minha tabela com este nome em vez do nome no model
   @@map("users")
 }
-
 
 // o mesmo usuario pode logar com um account(Google) - uma linha na tabela account coms os dados de um usuario, pode logar com Facebook, mais uma linha, github, etc etc, sempre com o mesmo usuario
 model Account {
@@ -60,6 +60,20 @@ model Session {
   expires       DateTime
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
   // cria minha tabela com este nome em vez do nome no model
   @@map("sessions")
+}
+
+// relacionado a um intervalo de tempo disponivel para o usuario
+model UserTimeInterval {
+  id                    String @id @default(uuid())
+  week_day              Int
+  time_start_in_minutes Int
+  time_end_in_minutes   Int
+
+  user   User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("user_time_intervals")
 }
