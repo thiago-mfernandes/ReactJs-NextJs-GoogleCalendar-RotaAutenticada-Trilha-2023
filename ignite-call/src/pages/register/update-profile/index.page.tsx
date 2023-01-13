@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormAnnotation, ProfileBox } from "./styles";
+import { useSession } from "next-auth/react";
+import { GetServerSideProps } from "next";
 
 
 const updateProfileSchema = z.object({
@@ -21,9 +23,12 @@ export default function UpdateProfile() {
     formState: { isSubmitting },
   } = useForm<UpdateProfileData>({
     resolver: zodResolver(updateProfileSchema),
-  });
+  });  
 
-  
+  //obter informacoes do usuario logado:
+  const session = useSession()
+  // console.log(session)
+
 
   async function handleUpdateProfile(data: UpdateProfileData){
     
@@ -32,7 +37,7 @@ export default function UpdateProfile() {
   return (
     <Container>
       <Header>
-        <Heading as="strong">Bem vindo ao gnite Call!</Heading>
+        <Heading as="strong">Bem vindo ao Ignite Call!</Heading>
         <Text>
           Precisamos de algumas informações para criar seu perfil! Ah, você pode editar essas informações depois.
         </Text>
@@ -60,4 +65,12 @@ export default function UpdateProfile() {
       </ProfileBox>
     </Container>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  return {
+    props: {
+
+    },
+  }
 }
